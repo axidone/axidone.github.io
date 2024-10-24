@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Axidone provides real-time news updates from various sources to keep you informed with the freshest stories. Stay updated with breaking news and headlines seamlessly.">
+    <meta name="robots" content="index, follow">
+    <meta name="keywords" content="news, real-time updates, headlines, Axidone, breaking news, latest news">
+    <meta property="og:title" content="Axidone - Real-time News, Smarter & Fresher">
+    <meta property="og:description" content="Axidone offers real-time news updates from various sources, ensuring you stay informed with the latest stories.">
+    <title>Axidone - Real-time News, Smarter & Fresher</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #000000; /* Черный фон */
+            --primary-color-dark: #1a1a1a; /* Темный серый */
+            --background-color: #121212; /* Очень темный фон страницы */
+            --text-color: #E0E0E0; /* Светло-серый текст */
+            --secondary-text-color: #B3B3B3; /* Темно-серый для вспомогательного текста */
+            --border-color: #FF0000; /* Яркий красный для акцентов */
+            --card-bg: #1e1e1e; /* Темный фон для карточек новостей */
+            --card-hover-bg: #2b2b2b; /* Светлее фон при наведении */
+            --card-border: #333; /* Цвет границы карточек */
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        header {
+            background: var(--primary-color);
+            color: var(--text-color);
+            width: 100%;
+            text-align: center;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
+        }
+
+        header h1 {
+            font-size: 2.5em; /* Размер заголовка */
+            font-weight: bold;
+        }
+
+        header p {
+            font-size: 1.2em;
+            font-weight: 300;
+            margin-top: 10px;
+        }
+
+        .filter-select select, .search-container input {
+            width: 100%;
+            padding: 12px 20px;
+            border-radius: 4px;
+            border: 2px solid var(--border-color);
+            font-size: 16px;
+            color: var(--text-color);
+            background-color: #1f1f1f;
+            cursor: pointer;
+            transition: border-color 0.3s ease, background-color 0.3s ease;
+        }
+
+        .filter-select select:focus, .search-container input:focus {
+            border-color: #FF0000; /* Яркий красный при фокусе */
+            background-color: #2e2e2e;
+        }
+
+        .news-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px;
+            justify-content: center;
+            width: 90%;
+            max-width: 1200px;
+            margin: 20px auto;
+        }
+
+        .news-item {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+        }
+
+        .news-item:hover {
+            background-color: var(--card-hover-bg);
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.6);
+        }
+
+        .news-item img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+
+        .news-item .content {
+            padding: 20px;
+        }
+
+        .news-item h3 {
+            font-size: 20px; /* Размер заголовка */
+            margin: 0 0 10px;
+            color: var(--border-color);
+            font-weight: bold;
+        }
+
+        .news-item p {
+            font-size: 15px;
+            color: var(--secondary-text-color);
+            margin-bottom: 15px;
+        }
+
+        .news-item a {
+            text-decoration: none;
+            color: var(--border-color);
+            font-weight: bold;
+        }
+
+        .news-item a:hover {
+            text-decoration: underline;
+        }
+
+        .news-item small {
+            display: block;
+            text-align: right;
+            color: #888;
+            font-size: 12px;
+            margin-top: 10px;
+        }
+
+        .load-more {
+            display: block;
+            width: 250px;
+            padding: 15px;
+            margin: 20px auto;
+            background-color: var(--border-color);
+            color: var(--text-color);
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .load-more:hover {
+            background-color: var(--primary-color-dark);
+            transform: scale(1.05);
+        }
+
+        .load-more:active {
+            transform: scale(1);
+        }
+
+        .footer {
+            margin: 30px 0;
+            text-align: center;
+            color: var(--secondary-text-color);
+            font-size: 14px;
+        }
+
+        .footer p {
+            margin-bottom: 5px;
+        }
+
+        .footer a {
+            color: var(--border-color);
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        .donate-button {
+            display: flex;
+            align-items: center;
+            background-color: var(--primary-color-dark);
+            color: var(--text-color);
+            padding: 10px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-size: 16px;
+            margin-top: 10px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            position: relative;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.6);
+        }
+
+        .donate-button:hover {
+            background-color: var(--primary-color);
+            transform: scale(1.05);
+        }
+
+        .donate-button:active {
+            transform: scale(1);
+        }
+
+        .donate-button i {
+            margin-right: 10px;
+            font-size: 18px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: #1e1e1e;
+            border-radius: 8px;
+            padding: 20px;
+            max-width: 90%;
+            width: 500px;
+            text-align: center;
+            position: relative;
+            color: #E0E0E0;
+        }
+
+        .modal-content h2 {
+            margin-bottom: 15px;
+            font-size: 24px; /* Размер заголовка в модальном окне */
+        }
+
+        .modal-content p {
+            margin-bottom: 15px;
+            font-size: 16px; /* Размер текста в модальном окне */
+        }
+
+        .modal-content img {
+            margin: 0 auto;
+            display: block;
+            max-width: 100%;
+            height: auto;
+        }
+
+        .modal-content code {
+            display: block;
+            background: #333;
+            padding: 10px;
+            border-radius: 5px;
+            color: #0f0;
+            word-break: break-all;
+            margin-bottom: 15px;
+        }
+
+        .modal-content button {
+            background-color: var(--primary-color-dark);
+            border: none;
+            color: #E0E0E0;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s ease;
+        }
+
+        .modal-content button:hover {
+            background-color: var(--primary-color);
+        }
+
+        .close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #E0E0E0;
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2em; /* Размер заголовка для мобильных устройств */
+            }
+
+            .filter-select, .search-container {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Axidone</h1>
+        <p>Real-time News, Smarter & Fresher Every Moment</p>
+    </header>
+    <div class="search-container">
+        <input type="text" id="search-input" placeholder="Search for news..." aria-label="Search news">
+    </div>
+
+    <div class="news-container" id="news-container"></div>
+    <div id="last-update-info" style="text-align: center; margin:5px; color: var(--secondary-text-color); font-size: 11px;"></div>
+    <button class="load-more" id="load-more-btn">Load More Stories</button>
+
+    <div class="footer">
+        <p>© 2024 Axidone. Always in Sync with Global News.</p>
+        <p>Version 1.1</p>
+        <a class="donate-button" id="donate-button" href="#" aria-label="Donate">
+            <i class="fas fa-donate" aria-hidden="true"></i> Donate
+        </a>
+    </div>
+
+    <div class="modal" id="donate-modal" role="dialog" aria-labelledby="modal-title">
+        <div class="modal-content">
+            <span class="close" id="close-modal" aria-label="Close modal">&times;</span>
+            <h2 id="modal-title">Support Us</h2>
+            <p>Your support helps us keep this service free and ad-free!</p>
+            <p>Donate using Bitcoin:</p>
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=bc1q4dxn8v5gk3ywmsadgrl3jl400e5g5r5xv522ku" alt="Bitcoin QR Code">
+            <code id="bitcoin-address">bc1q4dxn8v5gk3ywmsadgrl3jl400e5g5r5xv522ku</code>
+            <button id="copy-address-button">Copy Address</button>
+        </div>
+    </div>
+
+    <script>
+        const donateButton = document.getElementById('donate-button');
+        const donateModal = document.getElementById('donate-modal');
+        const closeModal = document.getElementById('close-modal');
+        const newsContainer = document.getElementById('news-container');
+        const lastUpdateInfo = document.getElementById('last-update-info');
+        const searchInput = document.getElementById('search-input');
+        const loadMoreBtn = document.getElementById('load-more-btn');
+
+        document.getElementById('copy-address-button').onclick = async function() {
+            try {
+                const address = document.getElementById('bitcoin-address').innerText;
+                await navigator.clipboard.writeText(address);
+                const notification = document.createElement('div');
+                notification.textContent = 'Bitcoin address copied!';
+                notification.style.cssText = 'position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #4CAF50; color: white; padding: 10px 20px; border-radius: 5px; z-index: 1000;';
+                document.body.appendChild(notification);
+                setTimeout(() => notification.remove(), 3000);
+            } catch (err) {
+                console.error('Failed to copy address:', err);
+                alert('Failed to copy address. Please try manually selecting and copying.');
+            }
+        }
+
+        // Improved modal handling
+        donateButton.onclick = function(e) {
+            e.preventDefault();
+            donateModal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        closeModal.onclick = function() {
+            donateModal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        window.onclick = function(event) {
+            if (event.target === donateModal) {
+                donateModal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+        }
+
+        // Keyboard accessibility for modal
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && donateModal.style.display === 'flex') {
+                donateModal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+        });
+
+        const newsSources = [
+                { url: 'https://www.aljazeera.com/xml/rss/all.xml', name: 'Al Jazeera' },
+                { url: 'https://arstechnica.com/feed/', name: 'Ars Technica' },
+                { url: 'http://feeds.bbci.co.uk/news/rss.xml', name: 'BBC' },
+                { url: 'https://rss.dw.com/xml/rss-en-all', name: 'Deutsche Welle (DW)' },
+                { url: 'https://news.ycombinator.com/rss', name: 'Hacker News' },
+                { url: 'https://www.technologyreview.com/feed/', name: 'MIT Technology Review' },
+                { url: 'https://feeds.npr.org/1001/rss.xml', name: 'NPR' },
+                { url: 'https://www.popsci.com/rss.xml', name: 'Popular Science' },
+                { url: 'https://qz.com/feed', name: 'Quartz' },
+                { url: 'https://www.reddit.com/r/news/.rss', name: 'Reddit' },
+                { url: 'https://techcrunch.com/feed/', name: 'TechCrunch' },
+                { url: 'https://www.theatlantic.com/feed/all/', name: 'The Atlantic' },
+                { url: 'https://www.theguardian.com/world/rss', name: 'The Guardian' },
+                { url: 'https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml', name: 'The New York Times' },
+                { url: 'https://www.theverge.com/rss/index.xml', name: 'The Verge' },
+                { url: 'https://www.wired.com/feed/rss', name: 'Wired' },
+            { url: 'https://feeds.nbcnews.com/nbcnews/public/news', name: 'NBC News' },
+            { url: 'https://www.techdirt.com/feed/', name: 'Techdirt' },
+            { url: 'https://www.vice.com/en/rss', name: 'Vice News' },
+            { url: 'https://www.independent.co.uk/news/rss', name: 'The Independent' },
+            { url: 'https://www.thedailybeast.com/rss', name: 'The Daily Beast' },
+            { url: 'https://www.politico.eu/rss', name: 'Politico Europe' },
+            { url: 'https://feeds.washingtonpost.com/rss/world', name: 'The Washington Post' },
+            { url: 'https://thehackernews.com/feeds/posts/default', name: 'The Hacker News' },
+            { url: 'https://feed.alternativeto.net/news/all/', name: 'Alternativeto' },
+             { url: 'https://news.google.com/rss/search?q=when:24h+allinurl:reuters.com&hl=en-US&gl=US&ceid=US:en', name: 'Reuters' },
+             { url: 'https://www.cbsnews.com/latest/rss/main', name: 'CBS News' },
+                { url: 'https://theintercept.com/feed/?rss', name: 'The Intercept' }
+        ];
+
+        const proxy = 'https://api.rss2json.com/v1/api.json?rss_url=';
+        let selectedSource = 'all';
+        let currentPage = 0;
+        const pageSize = 7;
+        let searchQuery = '';
+        let displayedNews = new Set();
+        let isLoading = false;
+
+        function formatDate(date) {
+            return date.toLocaleDateString('en-US', { 
+                year: 'numeric', 
+                month: 'short', 
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        // Improved error handling and loading states
+        async function fetchNewsFromSource(source) {
+            try {
+                const response = await fetch(proxy + encodeURIComponent(source.url));
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                const data = await response.json();
+                return data.items.map(item => ({
+                    title: item.title,
+                    link: item.link,
+                    description: item.description?.substring(0, 300) + '...' || '',
+                    pubDate: new Date(item.pubDate),
+                    media: item.enclosure?.link || '',
+                    sourceName: source.name
+                }));
+            } catch (error) {
+                console.error(`Error fetching data from ${source.name}:`, error);
+                return [];
+            }
+        }
+
+        function createMediaElement(mediaUrl) {
+            if (!mediaUrl) return null;
+            const mediaElement = document.createElement('div');
+
+            if (mediaUrl.match(/\.(mp4|webm|ogg)$/i)) {
+                mediaElement.innerHTML = `
+                    <video controls width="100%" height="180">
+                        <source src="${mediaUrl}" type="video/${mediaUrl.split('.').pop()}">
+                        Your browser does not support the video tag.
+                    </video>`;
+            } else if (mediaUrl.match(/\.(jpg|jpeg|png|gif|webp)$/i)) {
+                mediaElement.innerHTML = `<img src="${mediaUrl}" alt="News media" loading="lazy" width="100%" height="180">`;
+            }
+
+            return mediaElement;
+        }
+
+        async function loadNews(append = false) {
+            if (isLoading) return;
+            isLoading = true;
+            loadMoreBtn.textContent = 'Loading...';
+
+            try {
+                const filteredSources = selectedSource === 'all'
+                    ? newsSources
+                    : newsSources.filter(source => source.name === selectedSource);
+
+                const allNewsItems = await Promise.all(filteredSources.map(fetchNewsFromSource));
+                const allItems = allNewsItems.flat()
+                    .filter(item => 
+                        item.title?.toLowerCase().includes(searchQuery) || 
+                        item.description?.toLowerCase().includes(searchQuery)
+                    )
+                    .sort((a, b) => b.pubDate - a.pubDate);
+
+                const paginatedItems = allItems.slice(currentPage * pageSize, (currentPage + 1) * pageSize);
+
+                if (!append) {
+                    newsContainer.innerHTML = '';
+                    displayedNews.clear();
+                }
+
+                if (paginatedItems.length === 0) {
+                    if (!append) {
+                        newsContainer.innerHTML = '<p class="no-results">No news found. Try different search terms.</p>';
+                    }
+                    loadMoreBtn.style.display = 'none';
+                    return;
+                }
+
+                const fragment = document.createDocumentFragment();
+
+                paginatedItems.forEach(item => {
+                    if (displayedNews.has(item.link)) return;
+                    displayedNews.add(item.link);
+
+                    const div = document.createElement('div');
+                    div.classList.add('news-item');
+                    div.innerHTML = `
+                        <div class="content">
+                            <h3><a href="${item.link}" target="_blank" rel="noopener noreferrer">${item.title}</a></h3>
+                            <p>${item.description}</p>
+                            <p><small><strong>${item.sourceName}</strong> - ${formatDate(item.pubDate)}</small></p>
+                        </div>
+                    `;
+
+                    const mediaElement = createMediaElement(item.media);
+                    if (mediaElement) {
+                        div.insertBefore(mediaElement, div.firstChild);
+                    }
+
+                    fragment.appendChild(div);
+                });
+
+                newsContainer.appendChild(fragment);
+                loadMoreBtn.style.display = allItems.length > (currentPage + 1) * pageSize ? 'block' : 'none';
+                lastUpdateInfo.textContent = `Last updated: ${new Date().toLocaleTimeString()}`;
+            } catch (error) {
+                console.error('Error loading RSS feeds:', error);
+                if (!append) {
+                    newsContainer.innerHTML = '<p class="error">Error loading news. Please try again later.</p>';
+                }
+            } finally {
+                isLoading = false;
+                loadMoreBtn.textContent = 'Load More Stories';
+            }
+        }
+
+        // Debounced search
+        let searchTimeout;
+        function handleSearchInput() {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                searchQuery = searchInput.value.toLowerCase();
+                currentPage = 0;
+                loadNews();
+            }, 300);
+        }
+
+        function handleLoadMore() {
+            if (!isLoading) {
+                currentPage += 1;
+                loadNews(true);
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            loadNews();
+            // Refresh news every 4 minutes
+            setInterval(() => {
+                if (!isLoading && document.visibilityState === 'visible') {
+                    loadNews(true);
+                }
+            }, 4 * 60 * 1000);
+        });
+
+        searchInput.addEventListener('input', handleSearchInput);
+        loadMoreBtn.addEventListener('click', handleLoadMore);
+
+        // Handle visibility change
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'visible') {
+                loadNews(true);
+            }
+        });
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
+</body>
+</html>
